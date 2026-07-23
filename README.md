@@ -64,6 +64,4 @@ MONGODB_URI=mongodb://localhost:27017/audit-logs
 4. Access the application at `http://localhost:5173`.
 
 ## Deliverables
-
-- **GitHub Repository**: [Insert Link Here]
 - **Deployment Link**: [Insert Link Here]
