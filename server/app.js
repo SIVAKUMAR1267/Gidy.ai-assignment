@@ -6,8 +6,12 @@ const app = express();
 
 // Middleware
 app.use(cors());
-// Set a higher limit to accommodate up to 10,000 log records in JSON format
 app.use(express.json({ limit: '10mb' }));
+
+// Health Check
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 // Routes
 app.use('/api/logs', logRoutes);
