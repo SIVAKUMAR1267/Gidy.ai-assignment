@@ -42,7 +42,8 @@ function App() {
         if (value) queryParams.append(key, value);
       });
 
-      const response = await fetch(`http://localhost:5000/api/logs?${queryParams.toString()}`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/logs?${queryParams.toString()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch logs');
       }
