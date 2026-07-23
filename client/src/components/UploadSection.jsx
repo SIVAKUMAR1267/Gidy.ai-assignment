@@ -32,7 +32,7 @@ const UploadSection = ({ onUploadSuccess }) => {
         throw new Error('Uploaded JSON must be an array of records.');
       }
 
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/api/logs/bulk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -50,7 +50,7 @@ const UploadSection = ({ onUploadSuccess }) => {
       // Reset file input
       const fileInput = document.getElementById('logUpload');
       if (fileInput) fileInput.value = '';
-      
+
       onUploadSuccess();
     } catch (err) {
       setMessage({ text: err.message, type: 'error' });
@@ -63,15 +63,15 @@ const UploadSection = ({ onUploadSuccess }) => {
     <section className="upload-section">
       <h2>Upload Logs</h2>
       <div className="upload-controls">
-        <input 
-          type="file" 
+        <input
+          type="file"
           id="logUpload"
-          accept=".json" 
-          onChange={handleFileChange} 
+          accept=".json"
+          onChange={handleFileChange}
           disabled={uploading}
         />
-        <button 
-          className="btn btn-primary" 
+        <button
+          className="btn btn-primary"
           onClick={handleUpload}
           disabled={!file || uploading}
         >

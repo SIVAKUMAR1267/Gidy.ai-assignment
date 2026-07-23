@@ -42,7 +42,7 @@ function App() {
         if (value) queryParams.append(key, value);
       });
 
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/api/logs?${queryParams.toString()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch logs');
@@ -82,13 +82,13 @@ function App() {
       </header>
 
       <UploadSection onUploadSuccess={fetchLogs} />
-      
+
       <FilterBar filters={filters} onFilterChange={handleFilterChange} />
-      
+
       {error && <div className="alert alert-danger">{error}</div>}
-      
-      <LogsTable 
-        logs={logs} 
+
+      <LogsTable
+        logs={logs}
         loading={loading}
         sortBy={sortBy}
         order={order}
@@ -106,17 +106,17 @@ function App() {
             <option value="50">50 per page</option>
             <option value="100">100 per page</option>
           </select>
-          <button 
+          <button
             className="btn btn-primary"
-            disabled={page === 1} 
+            disabled={page === 1}
             onClick={() => setPage(p => p - 1)}
           >
             Previous
           </button>
           <span>Page {page}</span>
-          <button 
+          <button
             className="btn btn-primary"
-            disabled={page * limit >= totalCount} 
+            disabled={page * limit >= totalCount}
             onClick={() => setPage(p => p + 1)}
           >
             Next
