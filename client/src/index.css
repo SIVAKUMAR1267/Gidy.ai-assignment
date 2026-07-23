@@ -230,3 +230,31 @@ tbody tr:hover {
 .badge-low { background-color: #d1ecf1; color: #0c5460; }
 .badge-resolved { background-color: #d4edda; color: #155724; }
 .badge-unresolved { background-color: #f8d7da; color: #721c24; }
+
+/* Highlight Match */
+mark.highlight {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* Skeletons */
+.skeleton-box {
+  display: inline-block;
+  height: 14px;
+  background-color: #e2e5e7;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.table-container {
+  min-height: 500px;
+}
+

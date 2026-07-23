@@ -23,4 +23,8 @@ logSchema.index({ resourceType: 1 });
 logSchema.index({ region: 1 });
 logSchema.index({ timestamp: -1 });
 
+// Compound indexes for common filter + sort combinations
+logSchema.index({ role: 1, severity: 1, status: 1, timestamp: -1 });
+logSchema.index({ action: 1, timestamp: -1 });
+
 module.exports = mongoose.model('Log', logSchema);

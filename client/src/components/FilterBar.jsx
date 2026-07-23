@@ -1,97 +1,111 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const FilterBar = ({ filters, onFilterChange }) => {
-  const [localFilters, setLocalFilters] = useState(filters);
+const FilterBar = ({ filters, onFilterChange, onClear }) => {
+  const [options, setOptions] = useState({
+    role: [],
+    action: [],
+    severity: [],
+    status: [],
+    region: [],
+    resourceType: []
+  });
+
+  useEffect(() => {
+    // Fetch filter options only once and cache in state
+    const fetchOptions = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const res = await fetch(`${apiUrl}/api/logs/filters`);
+        if (res.ok) {
+          const data = await res.json();
+          setOptions(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch filter options', err);
+      }
+    };
+    fetchOptions();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLocalFilters(prev => ({ ...prev, [name]: value }));
+    onFilterChange({ ...filters, [name]: value });
   };
 
-  const applyFilters = () => {
-    onFilterChange(localFilters);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      applyFilters();
-    }
-  };
+  const activeCount = Object.entries(filters).filter(([k, v]) => k !== 'search' && v !== '').length;
+  const isSearchActive = filters.search !== '';
 
   return (
     <section className="filter-bar">
-      <div className="filter-group" style={{ flex: 2 }}>
+      <div className="filter-header" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600' }}>
+          Filters {activeCount > 0 && <span className="badge badge-medium" style={{ marginLeft: '8px' }}>{activeCount} Active</span>}
+        </h3>
+        {(activeCount > 0 || isSearchActive) && (
+          <button className="btn" onClick={onClear} style={{ backgroundColor: 'transparent', color: 'var(--danger-color)', textDecoration: 'underline' }}>
+            Clear Filters
+          </button>
+        )}
+      </div>
+
+      <div className="filter-group" style={{ flex: 2, minWidth: '200px' }}>
         <label htmlFor="search">Search</label>
         <input 
           type="text" 
           id="search" 
           name="search" 
           placeholder="Actor, Action, Resource, IP..." 
-          value={localFilters.search}
+          value={filters.search}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
         />
       </div>
 
       <div className="filter-group">
         <label htmlFor="role">Role</label>
-        <select id="role" name="role" value={localFilters.role} onChange={handleChange}>
+        <select id="role" name="role" value={filters.role} onChange={handleChange}>
           <option value="">All Roles</option>
-          <option value="admin">admin</option>
-          <option value="user">user</option>
-          <option value="system">system</option>
+          {options.role.map(opt => <option key={opt} value={opt}>{opt}</option>)}
         </select>
       </div>
 
       <div className="filter-group">
         <label htmlFor="severity">Severity</label>
-        <select id="severity" name="severity" value={localFilters.severity} onChange={handleChange}>
+        <select id="severity" name="severity" value={filters.severity} onChange={handleChange}>
           <option value="">All Severities</option>
-          <option value="LOW">LOW</option>
-          <option value="MEDIUM">MEDIUM</option>
-          <option value="HIGH">HIGH</option>
-          <option value="CRITICAL">CRITICAL</option>
+          {options.severity.map(opt => <option key={opt} value={opt}>{opt}</option>)}
         </select>
       </div>
 
       <div className="filter-group">
         <label htmlFor="status">Status</label>
-        <select id="status" name="status" value={localFilters.status} onChange={handleChange}>
+        <select id="status" name="status" value={filters.status} onChange={handleChange}>
           <option value="">All Statuses</option>
-          <option value="Resolved">Resolved</option>
-          <option value="Unresolved">Unresolved</option>
-          <option value="Pending">Pending</option>
+          {options.status.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+        </select>
+      </div>
+
+      <div className="filter-group">
+        <label htmlFor="action">Action</label>
+        <select id="action" name="action" value={filters.action} onChange={handleChange}>
+          <option value="">All Actions</option>
+          {options.action.map(opt => <option key={opt} value={opt}>{opt}</option>)}
         </select>
       </div>
 
       <div className="filter-group">
         <label htmlFor="resourceType">Resource Type</label>
-        <input 
-          type="text" 
-          id="resourceType" 
-          name="resourceType" 
-          placeholder="e.g. USER, API" 
-          value={localFilters.resourceType}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
+        <select id="resourceType" name="resourceType" value={filters.resourceType} onChange={handleChange}>
+          <option value="">All Types</option>
+          {options.resourceType.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+        </select>
       </div>
 
       <div className="filter-group">
         <label htmlFor="region">Region</label>
-        <input 
-          type="text" 
-          id="region" 
-          name="region" 
-          placeholder="e.g. us-east-1" 
-          value={localFilters.region}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
-      </div>
-      
-      <div className="filter-group" style={{ flex: 'none' }}>
-        <button className="btn btn-primary" onClick={applyFilters}>Apply Filters</button>
+        <select id="region" name="region" value={filters.region} onChange={handleChange}>
+          <option value="">All Regions</option>
+          {options.region.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+        </select>
       </div>
     </section>
   );
