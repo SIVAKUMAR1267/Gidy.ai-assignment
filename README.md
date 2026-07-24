@@ -64,4 +64,4 @@ MONGODB_URI=mongodb://localhost:27017/audit-logs
 4. Access the application at `http://localhost:5173`.
 
 ## Deliverables
-- **Deployment Link**: (https://github.com/SIVAKUMAR1267/Gidy.ai-assignment)
+- **Deployment Link**: https://gidy-ai-assignment-1.onrender.com
